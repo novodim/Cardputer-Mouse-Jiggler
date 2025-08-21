@@ -142,6 +142,7 @@ void loop() {
       M5Cardputer.Display.setCursor(M5Cardputer.Display.width() - 95, M5Cardputer.Display.height() - 120);
       M5Cardputer.Display.printf("Jiggles: %lu", jiggleCount);
       enterPressed = true;
+      performMouseJiggle();
     } else if (!M5Cardputer.Keyboard.isKeyPressed(0x28)) {
       enterPressed = false;
     }
