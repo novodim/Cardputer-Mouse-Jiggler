@@ -2,7 +2,7 @@
 *******************************************************************************
 * Copyright (c) 2025 by serginator
 *
-* Cardputer Mouse Jiggler v1.0.4
+* Cardputer Mouse Jiggler v1.0.5
 *
 * Describe: M5Stack Cardputer Mouse Jiggler
 * Date: 2025/08/21
@@ -16,10 +16,10 @@
 USBHIDMouse Mouse;
 
 unsigned long lastMoveTime = 0;
-unsigned long MIN_DELAY_MS = 60000;  // 1 minute
+unsigned long MIN_DELAY_MS = 240000;  // 4 minutes
 unsigned long MAX_DELAY_MS = 300000; // 5 minutes
 unsigned long currentDelay = MIN_DELAY_MS;
-bool jiggling = false;
+bool jiggling = true;
 bool screen = true;
 
 bool upPressed = false, downPressed = false, leftPressed = false, rightPressed = false, enterPressed = false, spacePressed = false;
@@ -204,7 +204,7 @@ static void drawMainUI(bool isJiggling, unsigned long nextDelayMs) {
   d.setTextDatum(top_center);
   d.setTextColor(COLOR_NEON_YELLOW);
   d.setTextSize(1.4f);
-  d.drawString("Mouse Jiggler 1.0.4", w / 2, 2);
+  d.drawString("Mouse Jiggler 1.0.5", w / 2, 2);
 
   // Left pane frame and D-Pad (reduced height below header)
   int16_t leftX = 6;
@@ -235,7 +235,7 @@ static void drawSplashScreen() {
   d.drawString("Cardputer Mouse Jiggler", 10, 10);
   d.setTextSize(1.2f);
   d.setTextColor(COLOR_TEXT_PRIMARY);
-  d.drawString("v1.0.4", 10, 34);
+  d.drawString("v1.0.5", 10, 34);
 
   // Mouse graphic center-right
   drawMouseIcon(140, 30, 1.3f, COLOR_NEON_MAGENTA);
@@ -243,6 +243,15 @@ static void drawSplashScreen() {
   // Author
   d.setTextColor(COLOR_TEXT_MUTED);
   d.drawString("by serginator", 10, 54);
+}
+
+void performMouseJiggle() {
+  int moveX = random(30, 51);
+  int moveY = random(-5, 6);
+
+  Mouse.move(moveX, moveY);
+  delay(200);
+  Mouse.move(-moveX, -moveY);
 }
 
 void setup() {
@@ -256,16 +265,11 @@ void setup() {
 
   drawSplashScreen();
   delay(2500);
-  updateDisplay();
-}
 
-void performMouseJiggle() {
-  int moveX = random(30, 51);
-  int moveY = random(-5, 6);
-
-  Mouse.move(moveX, moveY);
-  delay(200);
-  Mouse.move(-moveX, -moveY);
+  // Start in RUN mode
+  currentDelay = random(MIN_DELAY_MS, MAX_DELAY_MS + 1);
+  drawMainUI(true, currentDelay);
+  performMouseJiggle();
 }
 
 void loop() {
