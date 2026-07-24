@@ -255,6 +255,16 @@ void performMouseJiggle() {
 }
 
 void setup() {
+
+    delay(3000);
+    pinMode(0, INPUT_PULLUP);
+
+    if (digitalRead(0) == LOW) {
+        while (true) {
+            delay(100);
+        }
+    }
+
   M5Cardputer.begin();
   USB.begin();
   Mouse.begin();
